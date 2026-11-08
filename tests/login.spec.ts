@@ -46,4 +46,66 @@ test.describe("Autenticação - EstoqueLab", () => {
     await expect(loginPage.chkLembrarUsuario).toBeChecked();
     await expect(page.getByRole("button", { name: /admin/i })).toBeVisible();
   });
+
+  test("LOGIN-005 - Não deve permitir login sem preencher os campos", async () => {
+    await loginPage.realizarLogin("", "");
+
+    await expect
+      .poll(() =>
+        loginPage.usernameInput.evaluate(
+          (element: HTMLInputElement) => element.validity.valueMissing,
+        ),
+      )
+      .toBe(true);
+
+    await expect
+      .poll(() =>
+        loginPage.passwordInput.evaluate(
+          (element: HTMLInputElement) => element.validity.valueMissing,
+        ),
+      )
+      .toBe(true);
+  });
+
+  test("LOGIN-006 - Não deve permitir login sem informar o usuário", async () => {
+    await loginPage.realizarLogin("", "123456");
+
+    await expect
+      .poll(() =>
+        loginPage.usernameInput.evaluate(
+          (element: HTMLInputElement) => element.validity.valueMissing,
+        ),
+      )
+      .toBe(true);
+  });
+
+  test("LOGIN-007 - Não deve permitir login sem informar a senha", async () => {
+    await loginPage.realizarLogin("admin", "");
+
+    await expect
+      .poll(() =>
+        loginPage.passwordInput.evaluate(
+          (element: HTMLInputElement) => element.validity.valueMissing,
+        ),
+      )
+      .toBe(true);
+  });
+
+  test("LOGIN-008 - Não deve realizar login com senha incorreta", async () => {
+    await loginPage.realizarLogin("admin", "senhaIncorreta");
+
+    await expect(loginPage.msgErroLogin).toBeVisible();
+    await expect(loginPage.msgErroLogin).toHaveText(
+      "Usuário ou senha inválidos.",
+    );
+  });
+
+  test("LOGIN-009 - Não deve realizar login com usuário inexistente", async () => {
+    await loginPage.realizarLogin("usuarioInexistente", "123456");
+
+    await expect(loginPage.msgErroLogin).toBeVisible();
+    await expect(loginPage.msgErroLogin).toHaveText(
+      "Usuário ou senha inválidos.",
+    );
+  });
 });
