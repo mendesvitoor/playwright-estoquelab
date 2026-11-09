@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { LoginPage } from "../tests/e2e/loginPage";
+import { LoginPage } from "../../e2e/login/loginPage";
 
 test.describe("Autenticação - EstoqueLab", () => {
   let loginPage: LoginPage;
