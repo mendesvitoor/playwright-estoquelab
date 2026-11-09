@@ -7,6 +7,8 @@ export class LoginPage {
   readonly loginButton: Locator;
   readonly chkLembrarUsuario: Locator;
   readonly msgErroLogin: Locator;
+  readonly showRegisterButton: Locator;
+  readonly successLoginToast: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -16,6 +18,10 @@ export class LoginPage {
     this.loginButton = page.getByTestId("login-button");
     this.chkLembrarUsuario = page.locator('label[name="lblLembrarUsuario"]');
     this.msgErroLogin = page.locator('div[name="msgErroLogin"]');
+    this.showRegisterButton = page.getByTestId("show-register");
+    this.successLoginToast = page.getByText("Login realizado com sucesso!", {
+      exact: true,
+    });
   }
 
   async acessar(): Promise<void> {
@@ -39,5 +45,9 @@ export class LoginPage {
 
   async marcarManterConectado(): Promise<void> {
     await this.chkLembrarUsuario.check();
+  }
+
+  async acessarCadastro(): Promise<void> {
+    await this.showRegisterButton.click();
   }
 }
